@@ -1,5 +1,7 @@
 const CODE_LENGTH = 6;
 const ICON = '✎';
+let currentCode = '';
+let currentURL = '';
 
 function generateCode(){
   const letters = [
@@ -22,9 +24,12 @@ function shorten(url) {
       } else {
         const code = generateCode();
         display(code, url);
-        const obj = {};
-        obj[url] = code;
-        browser.storage.local.set(obj)
+        const obj1 = {};
+        const obj2 = {};
+        obj1[url] = code;
+        obj2[code] = url;
+        browser.storage.local.set(obj1)
+        browser.storage.local.set(obj2)
           .then(
             () => { display(code, url); },
             onError);
@@ -34,7 +39,7 @@ function shorten(url) {
 }
 
 function onError(error) {
-  display('<ERROR>', error);
+  display('UOPS', error);
 }
 
 function run(tabs){
@@ -44,8 +49,10 @@ function run(tabs){
 }
 
 function display(code, url) {
-  document.querySelector('.short .code').innerHTML = code;
-  document.querySelector('.url').innerHTML = url;
+  currentCode = code;
+  currentURL = url;
+  document.querySelector('.short .code').value = code;
+  document.querySelector('.url').textContent = `${url}`;
 }
 
 function reportError(error) {
@@ -60,5 +67,25 @@ if (browser && browser.tabs) {
     .catch(reportError);
 }
 
-browser.storage.local.get(null).then(
-  all => { console.log(all);})
+window.onload = () => {
+  let inputfield = document.querySelector('.short .code');
+  inputfield.addEventListener('keydown', ev => {
+    if (ev.keyCode == 13){
+      const code = inputfield.value.trim().toUpperCase();
+      browser.storage.local.get(code)
+        .then(codes => {
+          const url = codes[code];
+          if (url) {
+            browser.tabs.update({ url: url} );
+            display(code, url);
+          } else {
+            onError('Code not found!')
+          }
+        }, onError);
+
+
+    } else if (ev.keyCode == 27) {
+      display(currentCode, currentURL);
+    }
+  });
+}
