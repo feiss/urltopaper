@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "UrlToPaper",
+  "version": "0.1",
+
+  "description": "Personal URL shortener",
+  "homepage_url": "https://github.com/feiss/urltopaper",
+
+  "icons": {
+    "48": "icon.svg"
+  },
+
+  "permissions": [
+    "activeTab", "storage"
+  ],
+
+  "browser_action": {
+    "default_icon": "icon.svg",
+    "default_title": "UrlToPaper",
+    "default_popup": "popup.html"
+  },
+
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["urltopaper.js"]
+    }
+  ]
+
+}
