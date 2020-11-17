@@ -62,6 +62,3 @@ if (browser && browser.tabs) {
 
 browser.storage.local.get(null).then(
   all => { console.log(all);})
-
-
-//console.info("Opened UrlToPaper.");
