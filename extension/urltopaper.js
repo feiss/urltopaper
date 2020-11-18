@@ -17,7 +17,7 @@ function generateCode(){
 }
 
 function shorten(url) {
-  browser.storage.local.get(url)
+  browser.storage.sync.get(url)
     .then(codes => {
       if (codes[url]) {
         display(codes[url], url);
@@ -28,8 +28,8 @@ function shorten(url) {
         const obj2 = {};
         obj1[url] = code;
         obj2[code] = url;
-        browser.storage.local.set(obj1)
-        browser.storage.local.set(obj2)
+        browser.storage.sync.set(obj1)
+        browser.storage.sync.set(obj2)
           .then(
             () => { display(code, url); },
             onError);
@@ -72,7 +72,7 @@ window.onload = () => {
   inputfield.addEventListener('keydown', ev => {
     if (ev.keyCode == 13){
       const code = inputfield.value.trim().toUpperCase();
-      browser.storage.local.get(code)
+      browser.storage.sync.get(code)
         .then(codes => {
           const url = codes[code];
           if (url) {

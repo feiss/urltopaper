@@ -20,6 +20,13 @@
     "default_popup": "popup.html"
   },
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "urltopaper@feiss.be",
+      "strict_min_version": "42.0"
+    }
+  },
+
 
   "content_scripts": [
     {
