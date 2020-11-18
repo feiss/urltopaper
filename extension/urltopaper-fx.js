@@ -3,12 +3,6 @@ const ICON = '✎';
 let currentCode = '';
 let currentURL = '';
 
-window.browser = (function () {
-  return window.msBrowser ||
-    window.browser ||
-    window.chrome;
-})();
-
 function generateCode(){
   const letters = [
     'BCDFGHJKLMNPQRSTVWXYZ',
@@ -34,14 +28,14 @@ function saveCode(db, url){
     obj2[code] = url;
 
     browser.storage.sync.set(obj1);
-    browser.storage.sync.set(obj2, () => { display(code, url); });
+    browser.storage.sync.set(obj2)
+      .then(() => { display(code, url); }, onError);
   }
 }
 
 function shorten(url) {
-
   let saveCodeFn = res => { saveCode(res, url) };
-  browser.storage.sync.get([url], saveCodeFn);
+  browser.storage.sync.get(url).then(saveCodeFn, onError);
 }
 
 function onError(error) {
@@ -88,7 +82,7 @@ window.onload = () => {
       const code = inputfield.value.trim().toUpperCase();
 
       let openCodeFn = res => { openCode(res, code); };
-      browser.storage.sync.get(code, openCodeFn);
+      browser.storage.sync.get(code).then(openCodeFn, onError);
 
     } else if (ev.keyCode == 27) {
       display(currentCode, currentURL);
@@ -97,5 +91,7 @@ window.onload = () => {
 }
 
 if (browser && browser.tabs) {
-  browser.tabs.query({active: true, currentWindow: true}, run);
+  browser.tabs.query({active: true, currentWindow: true})
+    .then(run)
+    .catch(reportError);
 }
