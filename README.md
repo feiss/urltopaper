@@ -5,7 +5,7 @@
 
 ![sshot](sshot.png)
 
-![video](https://youtu.be/PeO9ZYjI40A)
+[Watch video](https://youtu.be/PeO9ZYjI40A)
 
 Managing your personal log or TODO list on an actual notebook, using paper, is probably one of the best options you have. However, you cannot have clickable URLs in paper!!
 
