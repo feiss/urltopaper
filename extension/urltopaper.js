@@ -13,12 +13,18 @@ let options = {
   showDatabase: false,
 };
 
+window.browser = (function () {
+  return window.msBrowser ||
+    window.browser ||
+    window.chrome;
+})();
+
 function loadOptions(){
-  browser.storage.sync.get(OPTIONS.USE_NUMERIC).then(db => {
+  browser.storage.sync.get(OPTIONS.USE_NUMERIC, db => {
     options.useNumeric = db[OPTIONS.USE_NUMERIC] && db[OPTIONS.USE_NUMERIC] === true;
     document.getElementById('usenumeric').checked = options.useNumeric;
   });
-  browser.storage.sync.get(OPTIONS.SHOW_DB).then(db => {
+  browser.storage.sync.get(OPTIONS.SHOW_DB, db => {
     options.showDatabase = db[OPTIONS.SHOW_DB] && db[OPTIONS.SHOW_DB] === true;
     document.getElementById('showdatabase').checked = options.showDatabase;
     updateDB();
@@ -46,7 +52,7 @@ function updateDB(){
   if (!options.showDatabase) { return; }
   const table = document.getElementById('db');
   table.textContent = '';
-  browser.storage.sync.get().then(db => {
+  browser.storage.sync.get(null, db => {
     for (let item in db){
       if (item.length > 5 || item[0] == '_') { continue; }
       const tr = document.createElement('div');
@@ -94,30 +100,31 @@ function generateCode(idx, url){
 
   browser.storage.sync.set(obj1);
   browser.storage.sync.set(obj2);
-  browser.storage.sync.set(obj_idx)
-    .then(() => {
+  browser.storage.sync.set(obj_idx, () => {
       display(code, url);
       updateDB();
-    }, onError);
+    }
+  );
 }
+
 
 function saveCode(db, url){
   if (db[url]) {
     display(db[url], url);
   } else {
-    browser.storage.sync.get(CODE_INDEX).then(db => {
+    browser.storage.sync.get(CODE_INDEX, db => {
       if (db[CODE_INDEX]) {
         generateCode(parseInt(db[CODE_INDEX]), url);
       } else {
         generateCode(0, url);
       }
-    }, onError);
+    });
   }
 }
 
 function shorten(url) {
   let saveCodeFn = res => { saveCode(res, url) };
-  browser.storage.sync.get(url).then(saveCodeFn, onError);
+  browser.storage.sync.get(url, saveCodeFn);
 }
 
 function onError(error) {
@@ -168,7 +175,7 @@ window.onload = () => {
       }
 
       let openCodeFn = res => { openCode(res, code); };
-      browser.storage.sync.get(code).then(openCodeFn, onError);
+      browser.storage.sync.get(code, openCodeFn);
 
     } else if (ev.keyCode == 27) {
       display(currentCode, currentURL);
@@ -188,11 +195,10 @@ window.onload = () => {
   }
 }
 
-if (browser && browser.tabs) {
-  browser.tabs.query({active: true, currentWindow: true})
-    .then(run)
-    .catch(reportError);
 
+if (browser && browser.tabs) {
+  browser.tabs.query({active: true, currentWindow: true}, run);
   //debug
-//  browser.storage.sync.get().then(db => {console.log(db);}, onError);
+//  browser.storage.sync.get(null, db => {console.log(db);});
 }
+
