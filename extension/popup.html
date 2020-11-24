@@ -5,9 +5,12 @@
   <style type="text/css">
     body{
       font: 14px sans-serif;
-      margin: 0.5rem 1rem;
+      margin: 0;
       line-height: 1.5rem;
       text-align: right;
+    }
+    #page {
+      margin: 1rem 1rem;
     }
     h1{
       font-size: 18px;
@@ -15,44 +18,88 @@
     .short{
       font-size: 16px;
       font-weight: bold;
-      padding: 4px 10px;
-      border-radius: 8px;
+      padding: 4px 6px 1px 6px;
+      border-radius: 5px;
       background-color: #fe8;
       display: inline-block;
-      margin-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ca6;
     }
     .short .code{
       font-size: 16px;
       font-weight: bold;
       background-color: #fe8;
       border: none;
-      width: 5rem;
+      width: 4rem;
       outline: none;
     }
     .short .code::selection{
       background: #d0b0a0;
     }
     .short .code::-moz-selection{
-      background: #FFF;
+      background: #d0b0a0;
     }
     .short .icon{
       color: #985;
-      font-size: 20px;
+      font-size: 18px;
     }
     .url{
+      line-height: 1rem;
       width: max-content;
-      min-width: 130px;
+      min-width: 150px;
+      max-width: 400px;
+      text-align: left;
+      word-break: break-all;
+    }
+    label{
+      cursor: pointer;
+    }
+    #toggle-options{
+      font-size: 24px;
+      color: #888;
+      text-decoration: none;
+      position: absolute;
+      left: 10px;
+      top: 12px;
+    }
+    label:hover{
+      color: #000;
+    }
+    input:checked + .options { display: block; }
+    .options{
+      display: none;
+      background: #e0e0e0;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem 0.5rem 2rem;
+      margin: 4px 0 1rem 0;
+      border-bottom: 1px solid #aaa;
+    }
+    .options h1{
+      margin: 0;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-<div>
+  <label for="options-check" id="toggle-options">&#9881;</label>
+  <input type='checkbox' style='display: none' id="options-check">
+  <div class="options">
+    <h1>Options</h1>
+    <label>
+    <input type="checkbox" id="usenumeric">
+    Use numeric code
+    </label>
+  </div>
+
+<div id="page">
   <div class="short">
     <span class="icon">✎</span>
     <input class="code">
   </div>
-  <div class="url">http://url.com</div>
+  <div class="url"></div>
+
 </div>
+<script src="dict.js"></script>
 <script src="urltopaper.js"></script>
 </body>
 </html>
