@@ -14,3 +14,11 @@ What about having a button on the browser that gives you a simple, short code li
 That is what this extension aims to do. It manages a personal URL shortener you can take note of, and that synchronises across all the browsers you are logged in.
 
 ![sshot2](sshot2.png)
+
+
+## Developers
+
+* To build for Firefox: `./build.sh fx`
+* To build for Chrome: `./build.sh chrome`
+
+ZIP packages will be generated in the 'build/' folder.
