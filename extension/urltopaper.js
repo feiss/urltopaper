@@ -6,15 +6,22 @@ let currentURL = '';
 
 const OPTIONS = {
   USE_NUMERIC: '_use_numeric_',
+  SHOW_DB: '_show_database_',
 };
 let options = {
   useNumeric: false,
+  showDatabase: false,
 };
 
 function loadOptions(){
   browser.storage.sync.get(OPTIONS.USE_NUMERIC).then(db => {
     options.useNumeric = db[OPTIONS.USE_NUMERIC] && db[OPTIONS.USE_NUMERIC] === true;
     document.getElementById('usenumeric').checked = options.useNumeric;
+  });
+  browser.storage.sync.get(OPTIONS.SHOW_DB).then(db => {
+    options.showDatabase = db[OPTIONS.SHOW_DB] && db[OPTIONS.SHOW_DB] === true;
+    document.getElementById('showdatabase').checked = options.showDatabase;
+    updateDB();
   });
 }
 
@@ -24,6 +31,50 @@ function useNumericSet(useNumeric){
   obj[OPTIONS.USE_NUMERIC] = options.useNumeric;
   browser.storage.sync.set(obj);
   saveCode({}, currentURL);
+}
+
+function showDatabaseSet(showDatabase){
+  options.showDatabase = showDatabase;
+  const obj = {};
+  obj[OPTIONS.SHOW_DB] = options.showDatabase;
+  browser.storage.sync.set(obj);
+  updateDB();
+}
+
+function updateDB(){
+  document.getElementById('db').style.display = options.showDatabase ? 'block' : 'none';
+  if (!options.showDatabase) { return; }
+  const table = document.getElementById('db');
+  table.textContent = '';
+  browser.storage.sync.get().then(db => {
+    for (let item in db){
+      if (item.length > 5 || item[0] == '_') { continue; }
+      const tr = document.createElement('div');
+      const td1 = document.createElement('span');
+      const td2 = document.createElement('span');
+      const tda = document.createElement('a');
+      tda.textContent = '✕';
+      tda.href = "#";
+      tda.addEventListener('click', ev => {
+        deleteCode(ev.target, item);
+      });
+      td1.className = 'code';
+      td1.textContent = item;
+      const link = document.createElement('a');
+      link.href = db[item];
+      link.textContent = db[item];
+      td2.appendChild(link);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(tda);
+      table.appendChild(tr);
+    }
+  });
+}
+
+function deleteCode(el, code){
+  browser.storage.sync.remove(code);
+  el.parentNode.parentNode.removeChild(el.parentNode);
 }
 
 function generateCode(idx, url){
@@ -39,7 +90,10 @@ function generateCode(idx, url){
   browser.storage.sync.set(obj1);
   browser.storage.sync.set(obj2);
   browser.storage.sync.set(obj_idx)
-    .then(() => { display(code, url); }, onError);
+    .then(() => {
+      display(code, url);
+      updateDB();
+    }, onError);
 }
 
 function saveCode(db, url){
@@ -118,8 +172,13 @@ window.onload = () => {
   let useNumericCheck = document.getElementById('usenumeric');
   if (useNumericCheck) {
     useNumericCheck.addEventListener('change', ev => {
-      console.log(ev.target, ev.target.checked)
       useNumericSet(ev.target.checked);
+    });
+  }
+  let showDatabase = document.getElementById('showdatabase');
+  if (showDatabase) {
+    showDatabase.addEventListener('change', ev => {
+      showDatabaseSet(ev.target.checked);
     });
   }
 }
