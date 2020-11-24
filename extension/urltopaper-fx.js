@@ -53,17 +53,22 @@ function updateDB(){
       const td1 = document.createElement('span');
       const td2 = document.createElement('span');
       const tda = document.createElement('a');
+
+      td1.textContent = item;
+      td1.className = 'code';
+
+      td2.className = 'url';
+      const link = document.createElement('a');
+      link.href = db[item];
+      link.textContent = db[item];
+      td2.appendChild(link);
+
       tda.textContent = '✕';
       tda.href = "#";
       tda.addEventListener('click', ev => {
         deleteCode(ev.target, item);
       });
-      td1.className = 'code';
-      td1.textContent = item;
-      const link = document.createElement('a');
-      link.href = db[item];
-      link.textContent = db[item];
-      td2.appendChild(link);
+
       tr.appendChild(td1);
       tr.appendChild(td2);
       tr.appendChild(tda);
