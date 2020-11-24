@@ -34,7 +34,7 @@ function generateCode(idx, url){
   const obj_idx = {};
   obj1[url] = code;
   obj2[code] = url;
-  obj_idx[CODE_INDEX] = idx + 1;
+  obj_idx[CODE_INDEX] = (idx + 1) % DICT.length;
 
   browser.storage.sync.set(obj1);
   browser.storage.sync.set(obj2);
@@ -130,5 +130,5 @@ if (browser && browser.tabs) {
     .catch(reportError);
 
   //debug
-  browser.storage.sync.get().then(db => {console.log(db);}, onError);
+//  browser.storage.sync.get().then(db => {console.log(db);}, onError);
 }

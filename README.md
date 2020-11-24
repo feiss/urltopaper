@@ -1,9 +1,9 @@
-# UrlToPaper 
+# UrlToPaper
 
 ### A personal URL shortener
 
 
-![sshot](sshot.png)
+![sshot1](sshot1.png)
 
 [Watch video](https://youtu.be/PeO9ZYjI40A)
 
@@ -13,3 +13,4 @@ What about having a button on the browser that gives you a simple, short code li
 
 That is what this extension aims to do. It manages a personal URL shortener you can take note of, and that synchronises across all the browsers you are logged in.
 
+![sshot2](sshot2.png)
