@@ -21,4 +21,4 @@ That is what this extension aims to do. It manages a personal URL shortener you 
 * To build for Firefox: `./build.sh fx`
 * To build for Chrome: `./build.sh chrome`
 
-ZIP packages will be generated in the 'build/' folder.
+ZIP packages will be generated in the `build/` folder.
